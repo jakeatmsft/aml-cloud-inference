@@ -1,0 +1,20 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+outputs:
+  predictions:
+    type: uri_file
+    mode: mount
+environment:
+  name: AzureML-ai-ml-automl
+  image: mcr.microsoft.com/azureml/curated/ai-ml-automl:22
+  conda_file: environment.yml
+environment_variables:
+  AZURE_SUBSCRIPTION_ID: ${{subscription_id}}
+  AZURE_RESOURCE_GROUP: ${{resource_group}}
+  AZURE_WORKSPACE_NAME: ${{workspace_name}}
+  LOCAL_MODEL_PATH: model
+code: src
+command: >
+  python score.py \
+    --output_path ${{outputs.predictions}}
+compute: azureml:cpu-cluster
